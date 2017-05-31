@@ -12,6 +12,15 @@ set(sources src/PID.cpp src/main.cpp)
 include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    
+    set(sources src/PID.cpp src/main.cpp src/uWS/Extensions.cpp src/uWS/Group.cpp src/uWS/WebSocketImpl.cpp src/uWS/Networking.cpp src/uWS/Hub.cpp src/uWS/Node.cpp src/uWS/WebSocket.cpp src/uWS/HTTPSocket.cpp src/uWS/Socket.cpp src/uWS/uUV.cpp)
+
+else(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(sources src/PID.cpp src/main.cpp)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
 include_directories(/usr/local/opt/openssl/include)
@@ -23,4 +32,6 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 add_executable(pid ${sources})
 
-target_link_libraries(pid z ssl uv uWS)
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    target_link_libraries(pid z ssl uv uWS)
+endif(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
